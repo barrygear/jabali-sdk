@@ -1,0 +1,194 @@
+openapi: 3.0.1
+info:
+  description: API Proposal for Jabali.
+  title: jabali-api
+  version: 0.0.1
+servers:
+- url: http://localhost:8080/
+tags:
+- description: Handle Gophers
+  name: gophers
+paths:
+  /healthz:
+    get:
+      description: Check Health
+      operationId: checkHealth
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                enum:
+                - OK
+                type: string
+          description: OK message.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+      tags:
+      - jabali
+  /games:
+    get:
+      description: List Games
+      operationId: listGames
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Game'
+                type: array
+          description: Return the Games list.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+      summary: List Games
+      tags:
+      - jabali
+  /game:
+    post:
+      description: Create a new Game
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createGame_request'
+        description: The Game to create.
+        required: false
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+          description: Created
+        "409":
+          content: {}
+          description: Game already exists
+      summary: Create a new Game
+      tags:
+      - jabali
+      x-codegen-request-body-name: game
+  /game/{gameId}:
+    delete:
+      description: Delete a game by a given ID
+      operationId: deleteGame
+      parameters:
+      - description: ID of the game to delete
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content: {}
+          description: OK
+        "404":
+          content: {}
+          description: A game with the specified ID was not found.
+      summary: Delete a game
+      tags:
+      - jabali
+    get:
+      description: Get a Game
+      operationId: getGame
+      parameters:
+      - description: ID of the game to get
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+          description: A Game
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+        "404":
+          content: {}
+          description: A game with the specified ID was not found.
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+      summary: Get a Game
+      tags:
+      - jabali
+    put:
+      description: Update a game
+      operationId: updateGame
+      parameters:
+      - description: ID of the game to get
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createGame_request'
+        description: The Game to update.
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+          description: Updated
+        "404":
+          content: {}
+          description: A game with the specified ID was not found.
+      summary: Update a game
+      tags:
+      - jabali
+      x-codegen-request-body-name: game
+components:
+  schemas:
+    Game:
+      example:
+        gameId: 4e1243bd22c66e76c2ba9eddc1f91394e57f9f83
+        displayName: My Game
+        name: my-game
+        url: https://raw.githubusercontent.com/scraly/gophers/main/arrow-gopher.png
+      properties:
+        name:
+          example: my-game
+          type: string
+        displayName:
+          example: My Game
+          type: string
+        gameId:
+          example: 4e1243bd22c66e76c2ba9eddc1f91394e57f9f83
+          type: string
+        url:
+          example: https://raw.githubusercontent.com/scraly/gophers/main/arrow-gopher.png
+          type: string
+      type: object
+    createGame_request:
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        url:
+          type: string
+      required:
+      - displayName
+      - name
+      - url
+      type: object
+x-original-swagger-version: "2.0"

@@ -1,0 +1,187 @@
+consumes:
+- application/json
+info:
+  description: API Proposal for Jabali.
+  title: jabali-api
+  version: 0.0.1
+produces:
+- application/json
+host: localhost:8080
+schemes:
+- http
+swagger: "2.0"
+tags:
+  - name: gophers
+    description: Handle Gophers
+
+paths:
+  /healthz:
+    get:
+      description: Check Health
+      tags:
+        - jabali
+      operationId: checkHealth
+      produces:
+      - text/plain
+      responses:
+        '200':
+          description: OK message.
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+          schema:
+            type: string
+            enum:
+            - OK
+  /games:
+    get:
+      description: List Games
+      summary: List Games
+      operationId: listGames         
+      tags:
+        - jabali
+      produces:
+       - application/json
+      responses:
+        200:
+          description: Return the Games list.
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Game'
+  /game:
+    post:
+      summary: Create a new Game
+      description: Create a new Game
+      operationId: createGame         
+      tags:
+        - jabali
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: game
+          description: The Game to create.
+          schema:
+            type: object
+            required:
+              - name
+              - displayName
+              - url
+            properties:
+              name:
+                type: string
+              displayName:
+                type: string
+              url:
+                type: string
+      responses:
+        201:
+          description: Created
+          schema:
+            type: object
+            $ref: '#/definitions/Game'
+        409:
+          description: Game already exists
+
+  /game/{gameId}:
+    get:
+      summary: Get a Game
+      description: Get a Game
+      operationId: getGame       
+      tags:
+        - jabali
+      produces:
+       - application/json
+      parameters:
+        - in: path
+          name: gameId
+          type: string
+          required: true
+          description: ID of the game to get       
+      responses:
+        200:
+          description: A Game
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+          schema:
+            type: object
+            $ref: '#/definitions/Game'
+        404:
+          description: A game with the specified ID was not found.
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+    delete:
+      description: Delete a game by a given ID
+      summary: Delete a game
+      operationId: deleteGame      
+      tags:
+        - jabali
+      parameters:
+        - in: path
+          name: gameId
+          type: string
+          required: true
+          description: ID of the game to delete   
+      responses:
+        200:
+          description: OK
+        404:
+          description: A game with the specified ID was not found.
+    put:
+      summary: Update a game
+      description: Update a game
+      operationId: updateGame        
+      tags:
+        - jabali
+      parameters:
+        - in: path
+          name: gameId
+          type: string
+          required: true
+          description: ID of the game to get         
+        - in: body
+          name: game
+          description: The Game to update.
+          schema:
+            type: object
+            required:
+              - name
+              - displayName
+              - url
+            properties:
+              name:
+                type: string
+              displayName:
+                type: string
+              url:
+                type: string
+      responses:
+        200:
+          description: Updated
+          schema:
+            type: object
+            $ref: '#/definitions/Game'
+        404:
+          description: A game with the specified ID was not found.
+definitions:
+  Game:
+    type: object
+    properties:
+      name:
+        type: string
+        example: my-game
+      displayName:
+        type: string
+        example: My Game
+      gameId:
+        type: string
+        example: 4e1243bd22c66e76c2ba9eddc1f91394e57f9f83
+      url:
+        type: string
+        example: https://raw.githubusercontent.com/scraly/gophers/main/arrow-gopher.png
