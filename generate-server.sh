@@ -4,6 +4,6 @@ openapi-generator generate \
   -i ../jabali-sdk/pkg/openapi/openapi.yaml \
   -g go-gin-server \
   --output generated/server \
-  --additional-properties packageName=jabali_sdk,packageVersion=0.0.1,useTags=true,outputAsLibrary=true,sourceFolder=openapi \
+  --additional-properties packageName=jabaliSDK,packageVersion=0.0.1,useTags=true,outputAsLibrary=true,sourceFolder=openapi \
   --git-user-id barrygear \
-  --git-repo-id jabali-sdk
+  --git-repo-id jabali-server
