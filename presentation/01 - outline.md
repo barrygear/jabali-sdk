@@ -26,6 +26,10 @@
     1. [Save Revision Detection](#save-revision-detection)
     1. [Object change notification](#object-change-notification)
     1. [Object locking](#object-locking)
+1. [Scaling Considerations](#scaling-considerations)
+    1. [Server scaling](#server-scaling)
+    1. [Database scaling](#database-scaling)
+    1. [Client scaling](#client-scaling)
 1. [Example Shell Session](#example-shell-session)
 
 ## Jabali API Proposal
@@ -159,7 +163,24 @@ For example:
     * Client calls updateObject to set position/name/values/etc
     * If multi-user functionality in implemented, check OptimisticLock for locking/object version collision
 
-### Example Shell Session
+## Scaling Considerations
+
+### Server scaling
+
+1. The server will run within kubernetes and should scale as requests increase due to Horizontal Pod Scalers.
+1. Caching may be utilized to fetch resources that change infrequently, like AI feature details (i.e. the list of AI methods and their parameters, etc).
+
+### Database scaling
+
+1. If RDS (or some other hosted database) is used, scaling the database is typically vertical (i.e. size of instance). Horizontal database scaling involves ether custom server code for key routing, explicit separation of databases (i.e. Asset database, User data, Game data), and configuration. After simplistic horizontal scaling has no more options, then vertical scaling will be applied. Ultimately, without some form of key sharding there will be a practical maximum. Key sharding for tradition RDB's require third party solutions.
+1. MongoDB scaling is similar to the previous option however sharding is a built in feature of Mongo and works well in my experience. It is much more complicated than simple database isolation and vertical scaling.
+
+### Client scaling
+
+1. Scaling the client for is similar to the server code, as it will be hosted via kubernetes.
+1. CDN hosting of the client code is possible depending on the architecture, i.e. complex node.js deployments may make it difficult.
+
+## Example Shell Session
 
 ```bash
 #!/usr/bin/env bash
