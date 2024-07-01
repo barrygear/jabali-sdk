@@ -108,3 +108,8 @@ _NEW_LEVEL_DATA=$(${CURL} "$(printf "${LEVELS_ENDPOINT}" ${_GAMEID})" --json '{"
 _LEVELID=$(jq -cr '.level-id' <<< ${_NEW_LEVEL_DATA})
 ```
 
+Authentication
+
+Successful user authentication will generate a jwt token with the subject claim (sub) set to the userId. The jwt token is required for each call, therefore each call will have the userId available via jwt decoding.
+
+Optionally it can be set as an HTTP header.
