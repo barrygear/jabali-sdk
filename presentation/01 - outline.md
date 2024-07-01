@@ -150,6 +150,15 @@ With multiple users editing the same level simultaneously, one nice (advanced) f
 
 When editing a object, i.e. moving it, renaming it, changing textures, etc an object lock would be placed first to prevent other users from changing it.
 
+For example:
+
+1. On MouseDown/KeyDown
+    * Single user behavior doesn't require server interaction during mouse or key down
+    * If multi-user functionality in implemented, set OptimisticLock on objectId. If not available, notify user
+2. On MouseUp/KeyUp
+    * Client calls updateObject to set position/name/values/etc
+    * If multi-user functionality in implemented, check OptimisticLock for locking/object version collision
+
 ### Example Shell Session
 
 ```bash
